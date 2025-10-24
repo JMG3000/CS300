@@ -1,0 +1,32 @@
+Runtime Analysis:
+Operation / Structure	LoadCourses (per file, total)	Search (single course)	Print all courses (sorted)	Memory (approx)
+Vector (as implemented) 	O(n·k) for parsing + O(n) inserts → dominated by O(n·k) ≈ O(n)	O(n) linear search	Sort then print: O(n log n) to sort + O(n) printing	O(n) (array of n Course objects)
+Hash Table (avg-case) 	O(n·k) parsing + O(n) avg-case inserts → O(n·k) ≈ O(n)	Avg O(1); worst-case O(n)	Extract & sort: O(n) to extract + O(n log n) to sort → O(n log n)	O(n + B) (buckets) ≈ O(n) but extra overhead for buckets
+Binary Search Tree (unbalanced) 	O(n·k) parsing + inserts; worst-case insert each O(n) → worst-case O(n²); avg-case if balanced O(n log n)	Avg O(log n); worst O(n)	In-order traversal gives sorted output in O(n)	O(n) (nodes + two pointers per node)
+
+Cost-per-line style breakdown:
+To evaluate performance, the key focus is on the LoadCourses routine since it is the most computationally significant operation. The evaluation below considers the Vector, Hash Table, and Binary Search Tree (BST) implementations and compares their average and worst-case time complexities, per-line costs, and memory requirements. The variable n represents the number of courses in the input file, and k represents the average number of tokens (course number, title, and prerequisites) per line. Each major action in the pseudocode contributes a cost per execution line. Assuming a unit cost of 1 per statement unless otherwise noted, the per-line costs for each course record are as follows:
+
+
+Step in LoadCourses	Operation	Cost per line	Executions	Total Cost	Notes
+Open file	File I/O initialization	1	1	O(1)	Constant overhead
+Read line	Input line read	1	n	O(n)	Executes once per course line
+Split line by commas	Tokenization	k	n	O(n·k)	Depends on number of comma-separated values
+Validate token count	Conditional check	1	n	O(n)	Ensures ≥2 tokens (course ID and title)
+Create Course object	Allocation + assignment	1	n	O(n)	New object each line
+Add prerequisites loop	Add (k − 2) prereqs	k	n	O(n·k)	Nested loop adds each prerequisite
+Duplicate check	ExistsCourseNumber linear scan	i (avg ~ n/2)	n	O(n²) worst, O(n) amortized if hashed lookup	Prevents duplicate course numbers
+Add to data structure	insert / push_back / insertNode	varies	n	varies by structure	See next table
+Validation pass	Nested prerequisite existence checks	n·p (~n·k)*	1	O(n²) worst if linear search; O(n) avg if hashed	Ensures all prerequisites exist
+Close file	Final I/O	1	1	O(1)	Constant time
+
+
+The total cost per line therefore depends primarily on how the duplicate check and insert operations scale in the chosen data structure.
+ 
+Recommendation and Analysis of Data Structure Selection:
+After careful evaluation of the three data structures explored throughout this project: the vector, hash table, and binary search tree (BST). I have deduced that the most effective data structure for the ABCU advising program is the hash table. This selection is based on its balance of efficiency, simplicity, and suitability for the primary tasks required by the academic advisors. One additional consideration is the optional use of a secondary vector or array to store course numbers in sorted order if frequent printing of the full course list is anticipated.
+
+The menu function of the advising program is to allow advisors to quickly retrieve specific course information upon request. The hash table excels in this regard, offering an average time complexity of O(1) for lookups. This means that, on average, retrieving course details, such as the course title and prerequisites, is done in constant time regardless of the total number of courses. From a user perspective, this provides an instant and seamless experience when advisors need to access information about a particular course, which is the most common type of query expected in this application.
+When loading data, both the vector and hash table demonstrate similar performance, with a total loading time of O(n), dominated primarily by the process of reading and parsing the input file. However, the hash table maintains an advantage by performing constant-time insertions during the loading process. This ensures the program remains responsive and efficient even as the dataset grows in size.
+
+Although printing a complete list of all courses in alphanumeric order (Option 2) is an important feature, it is likely to be used less frequently than individual course lookups. The hash table does not maintain inherent ordering of its elements, so printing the course list requires extracting all entries into a temporary list and then sorting them, which results in an O(n log n) time complexity. This additional cost is acceptable for occasional full-list displays. For scenarios where the advisors require frequent sorted outputs, maintaining a secondary vector or array of course numbers that is sorted once after loading the data provides an efficient solution. This approach allows subsequent prints of the full course list to execute quickly without repeated sorting.

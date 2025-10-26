@@ -3,7 +3,7 @@
 
 What was the problem you were solving in the projects for this course?
 
-The main problem I was solving in these projects was how to efficiently store, access, and manage course information for Computer Science advisors at ABC University (ABCU). Advisors needed a system to quickly load data from a file, validate it, and then display course information along with any prerequisites. Each milestone focused on implementing and improving this functionality using different data structures — vectors, binary search trees (BSTs), and hash tables — to explore how data organization impacts performance and design.
+The main problem I was solving in these projects was how to efficiently store, access, and manage course information for Computer Science advisors at ABC University (ABCU). Advisors needed a system to quickly load data from a file, validate it, and then display course information along with any prerequisites. Each milestone focused on implementing and improving this functionality using different data structures, vectors, binary search trees (BSTs), and hash tables, to explore how data organization impacts performance and design.
 
 How did you approach the problem?
 
